@@ -1,0 +1,42 @@
+{
+    "files": {
+        "bronze_csv_file": "ailab_bronze_eres_flight_data1.csv",
+        "silver_csv_files_list": [
+            "Ailab_curated_flight.csv",
+            "ailab_silver_eres_airportcode.csv",
+            "AiLab_Silver_eres_flight.csv",
+            "ailab_silver_eres_seasoncode.csv"
+        ],
+        "gold_csv_files_list": [
+            "AILab_Consumption_Customer_traveller.csv",
+            "AILab_Gold_dimension_flightdata.csv"
+        ]
+    },
+    "databases": {
+        "bronze_database_file": "bronze_data.db",
+        "silver_database_file": "silver_data.db",
+        "gold_database_file": "gold_data.db"
+    },
+    "silver_schema": {
+        "silver_flight": "silver_flight"
+    },
+    "gold_schema": {
+        "gold_flight": "gold_flight"
+    },
+    "logging": {
+        "log_file": "db_operations_new.log"
+    },
+    "bronze_tables": {
+        "bronze_eres_flight": "bronze_eres_flight.db"
+    },
+    "silver_tables": {
+        "Ailab_curated_flight": "Ailab_curated_flight.db",
+        "silver_eres_airportcode": "silver_eres_airportcode.db",
+        "silver_eres_flight": "silver_eres_flight.db",
+        "silver_eres_seasoncode": "silver_eres_seasoncode.db"
+    },
+    "gold_tables": {
+        "AILab_Consumption_Customer_traveller": "AILab_Consumption_Customer_traveller.db",
+        "Gold_dimension_flightdata": "Gold_dimension_flightdata.db"
+    }
+}

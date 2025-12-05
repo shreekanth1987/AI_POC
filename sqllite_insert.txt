@@ -1,0 +1,48 @@
+
+# --- Configuration ---
+# The name of your CSV file
+csv_file = 'bmi.csv' 
+# The name of the SQLite database file (it will be created if it doesn't exist)
+database_file = 'my_database.db' 
+# The name of the table you want to create in the database
+table_name = 'data_table' 
+# --- End Configuration ---
+
+def upload_csv_to_sqlite(csv_path, db_path, table):
+    """
+    Reads a CSV file and uploads its contents to an SQLite table.
+    """
+    try:
+        # 1. Connect to the SQLite database
+        conn = sqlite3.connect(db_path)
+        print(f"✅ Successfully connected to database: {db_path}")
+
+        # 2. Read the CSV file into a pandas DataFrame
+        # 'header=0' means the first row is used for column names
+        df = pd.read_csv(csv_path)
+        print(f"✅ Successfully read CSV file: {csv_path}")
+
+        # 3. Write the DataFrame to the SQLite database
+        # 'if_exists': 'replace' will drop the table and create a new one
+        # 'if_exists': 'append' will add rows to an existing table
+        # 'index=False' prevents pandas from writing the DataFrame index as a column
+        df.to_sql(table, conn, if_exists='replace', index=False)
+        print(f"✅ Successfully uploaded data to table: {table}")
+        
+        # Optional: Verify the upload
+        check_query = f"SELECT COUNT(*) FROM {table};"
+        count = pd.read_sql_query(check_query, conn).iloc[0, 0]
+        print(f"📊 Rows uploaded: {count}")
+
+    except FileNotFoundError:
+        print(f"❌ Error: The file '{csv_path}' was not found.")
+    except Exception as e:
+        print(f"❌ An unexpected error occurred: {e}")
+    finally:
+        # 4. Close the connection
+        if 'conn' in locals() and conn:
+            conn.close()
+            print("➡️ Database connection closed.")
+
+# Run the function
+upload_csv_to_sqlite(csv_file, database_file, table_name)

@@ -1,0 +1,262 @@
+{
+  "eventTime": "2025-12-03T17:44:35.856297+00:00",
+  "eventType": "COMPLETE",
+  "inputs": [
+    {
+      "facets": {
+        "columnLineage": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/ColumnLineageDatasetFacet",
+          "fields": {
+            "avg_order_value": {
+              "inputFields": [
+                {
+                  "field": "amount",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Average order value per customer per month",
+              "transformationType": "AGGREGATION"
+            },
+            "completed_orders": {
+              "inputFields": [
+                {
+                  "field": "status_normalized",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Count of completed orders per customer per month",
+              "transformationType": "AGGREGATION"
+            },
+            "customer_id": {
+              "inputFields": [
+                {
+                  "field": "customer_id",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Direct copy from Silver to Gold layer",
+              "transformationType": "IDENTITY"
+            },
+            "customer_tier": {
+              "inputFields": [
+                {
+                  "field": "amount",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Derived customer tier based on total revenue",
+              "transformationType": "DERIVATION"
+            },
+            "order_month": {
+              "inputFields": [
+                {
+                  "field": "order_date",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Truncated order_date to month level",
+              "transformationType": "TRANSFORMATION"
+            },
+            "total_orders": {
+              "inputFields": [
+                {
+                  "field": "order_id",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Count of orders per customer per month",
+              "transformationType": "AGGREGATION"
+            },
+            "total_revenue": {
+              "inputFields": [
+                {
+                  "field": "amount",
+                  "name": "silver/orders/validated",
+                  "namespace": "s3://company-datalake"
+                }
+              ],
+              "transformationDescription": "Sum of order amounts per customer per month",
+              "transformationType": "AGGREGATION"
+            }
+          }
+        },
+        "dataSource": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/DataSourceDatasetFacet",
+          "name": "snowflake-prod-warehouse",
+          "uri": "snowflake://prod.snowflakecomputing.com/analytics"
+        },
+        "schema": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/SchemaDatasetFacet",
+          "fields": [
+            {
+              "name": "customer_id",
+              "type": "BIGINT"
+            },
+            {
+              "name": "order_month",
+              "type": "DATE"
+            },
+            {
+              "name": "total_orders",
+              "type": "BIGINT"
+            },
+            {
+              "name": "total_revenue",
+              "type": "DECIMAL(12,2)"
+            },
+            {
+              "name": "avg_order_value",
+              "type": "DECIMAL(10,2)"
+            },
+            {
+              "name": "completed_orders",
+              "type": "BIGINT"
+            },
+            {
+              "name": "cancelled_orders",
+              "type": "BIGINT"
+            },
+            {
+              "name": "customer_tier",
+              "type": "VARCHAR(50)"
+            },
+            {
+              "name": "top_shipping_country",
+              "type": "VARCHAR(100)"
+            }
+          ]
+        }
+      },
+      "inputFacets": {},
+      "name": "analytics.gold.customer_order_summary",
+      "namespace": "snowflake://prod.snowflakecomputing.com"
+    }
+  ],
+  "job": {
+    "facets": {
+      "sql": {
+        "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+        "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/SqlJobFacet",
+        "query": "\n                    -- Python web app data refresh\n                    -- FastAPI endpoint: /api/v1/customers/{customer_id}/summary\n                    -- Cache strategy: Redis with 1-hour TTL\n                    SELECT \n                        customer_id,\n                        OBJECT_CONSTRUCT(\n                            'total_orders', total_orders,\n                            'total_revenue', total_revenue,\n                            'avg_order_value', avg_order_value,\n                            'customer_tier', customer_tier,\n                            'completed_orders', completed_orders\n                        ) as metrics\n                    FROM analytics.gold.customer_order_summary\n                    "
+      }
+    },
+    "name": "webapp_api_data_refresh",
+    "namespace": "data_lakehouse"
+  },
+  "outputs": [
+    {
+      "facets": {
+        "columnLineage": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/ColumnLineageDatasetFacet",
+          "fields": {
+            "customer_id": {
+              "inputFields": [
+                {
+                  "field": "customer_id",
+                  "name": "analytics.gold.customer_order_summary",
+                  "namespace": "snowflake://prod.snowflakecomputing.com"
+                }
+              ],
+              "transformationDescription": "Direct mapping from Gold layer to API cache",
+              "transformationType": "IDENTITY"
+            },
+            "metrics": {
+              "inputFields": [
+                {
+                  "field": "total_orders",
+                  "name": "analytics.gold.customer_order_summary",
+                  "namespace": "snowflake://prod.snowflakecomputing.com"
+                },
+                {
+                  "field": "total_revenue",
+                  "name": "analytics.gold.customer_order_summary",
+                  "namespace": "snowflake://prod.snowflakecomputing.com"
+                }
+              ],
+              "transformationDescription": "Aggregated metrics serialized into JSON for API response",
+              "transformationType": "DERIVATION"
+            }
+          }
+        },
+        "dataSource": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/DataSourceDatasetFacet",
+          "name": "redis-cache-prod",
+          "uri": "redis://cache.company.com:6379/0"
+        },
+        "schema": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/SchemaDatasetFacet",
+          "fields": [
+            {
+              "name": "customer_id",
+              "type": "BIGINT"
+            },
+            {
+              "description": "JSON containing all aggregated metrics",
+              "name": "metrics",
+              "type": "JSON"
+            },
+            {
+              "name": "last_updated",
+              "type": "TIMESTAMP"
+            },
+            {
+              "name": "cache_key",
+              "type": "STRING"
+            }
+          ]
+        }
+      },
+      "name": "webapp_cache/customer_summary_api",
+      "namespace": "redis://cache.company.com:6379",
+      "outputFacets": {
+        "outputStatistics": {
+          "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+          "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/OutputStatisticsOutputDatasetFacet",
+          "rowCount": 52000,
+          "size": 10485760
+        }
+      }
+    }
+  ],
+  "producer": "https://github.com/company/data-platform/v3.0",
+  "run": {
+    "facets": {
+      "parent": {
+        "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+        "_schemaURL": "https://raw.githubusercontent.com/OpenLineage/OpenLineage/main/spec/OpenLineage.json#/definitions/ParentRunFacet",
+        "job": {
+          "name": "daily_pipeline_orchestration",
+          "namespace": "data_lakehouse"
+        },
+        "run": {
+          "runId": "480466d7-21e4-4d69-bc66-55c86aa7aeaf"
+        }
+      },
+      "tags": {
+        "_producer": "https://github.com/OpenLineage/OpenLineage/tree/1.40.1/client/python",
+        "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/TagsRunFacet.json#/$defs/TagsRunFacet",
+        "tags": [
+          {
+            "key": "openlineage_client_version",
+            "source": "OPENLINEAGE_CLIENT",
+            "value": "1.40.1"
+          }
+        ]
+      }
+    },
+    "runId": "c5a82f3b-c973-4204-a78f-a2ebcc58955f"
+  },
+  "schemaURL": "https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent"
+}

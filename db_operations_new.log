@@ -1,0 +1,140 @@
+2025-12-05 12:02:18 - INFO - --- Data Loading Process Started ---
+2025-12-05 12:02:18 - INFO - \u2705 Configuration loaded successfully from sqllite_config.json.
+2025-12-05 12:02:18 - INFO - 
+--- EXECUTING BRONZE LOAD ---
+2025-12-05 12:02:18 - INFO - 
+--- Processing BRONZE File: ailab_bronze_eres_flight_data1.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: BRONZE\ailab_bronze_eres_flight_data1.csv
+2025-12-05 12:02:18 - INFO - Target DB: bronze_data.db
+2025-12-05 12:02:18 - INFO - Target Table: bronze_eres_flight
+2025-12-05 12:02:18 - INFO -    Successfully read 46 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'bronze_eres_flight' in bronze_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- EXECUTING SILVER LOAD (Files map to respective tables) ---
+2025-12-05 12:02:18 - INFO - 
+--- Processing SILVER File: Ailab_curated_flight.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: SILVER\Ailab_curated_flight.csv
+2025-12-05 12:02:18 - INFO - Target DB: silver_data.db
+2025-12-05 12:02:18 - INFO - Target Table: Ailab_curated_flight
+2025-12-05 12:02:18 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'Ailab_curated_flight' in silver_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- Processing SILVER File: ailab_silver_eres_airportcode.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: SILVER\ailab_silver_eres_airportcode.csv
+2025-12-05 12:02:18 - INFO - Target DB: silver_data.db
+2025-12-05 12:02:18 - INFO - Target Table: silver_eres_airportcode
+2025-12-05 12:02:18 - INFO -    Successfully read 100 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'silver_eres_airportcode' in silver_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- Processing SILVER File: AiLab_Silver_eres_flight.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: SILVER\AiLab_Silver_eres_flight.csv
+2025-12-05 12:02:18 - INFO - Target DB: silver_data.db
+2025-12-05 12:02:18 - INFO - Target Table: Silver_eres_flight
+2025-12-05 12:02:18 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'Silver_eres_flight' in silver_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- Processing SILVER File: ailab_silver_eres_seasoncode.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: SILVER\ailab_silver_eres_seasoncode.csv
+2025-12-05 12:02:18 - INFO - Target DB: silver_data.db
+2025-12-05 12:02:18 - INFO - Target Table: silver_eres_seasoncode
+2025-12-05 12:02:18 - INFO -    Successfully read 20 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'silver_eres_seasoncode' in silver_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- EXECUTING GOLD LOAD (Files map to respective tables) ---
+2025-12-05 12:02:18 - INFO - 
+--- Processing GOLD File: AILab_Consumption_Customer_traveller.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: GOLD\AILab_Consumption_Customer_traveller.csv
+2025-12-05 12:02:18 - INFO - Target DB: gold_data.db
+2025-12-05 12:02:18 - INFO - Target Table: AILab_Consumption_Customer_traveller
+2025-12-05 12:02:18 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'AILab_Consumption_Customer_traveller' in gold_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- Processing GOLD File: AILab_Gold_dimension_flightdata.csv ---
+2025-12-05 12:02:18 - INFO - Source Path: GOLD\AILab_Gold_dimension_flightdata.csv
+2025-12-05 12:02:18 - INFO - Target DB: gold_data.db
+2025-12-05 12:02:18 - INFO - Target Table: Gold_dimension_flightdata
+2025-12-05 12:02:18 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 12:02:18 - INFO -    \u2705 Data successfully loaded into table 'Gold_dimension_flightdata' in gold_data.db. Strategy: REPLACE
+2025-12-05 12:02:18 - INFO - 
+--- Data Loading Process Finished ---
+2025-12-05 17:46:55 - INFO - --- Data Loading Process Started ---
+2025-12-05 17:46:55 - INFO - Configuration loaded successfully from sqllite_config.json.
+2025-12-05 17:46:55 - INFO - 
+--- EXECUTING BRONZE LOAD ---
+2025-12-05 17:46:55 - INFO - 
+--- Processing BRONZE File: ailab_bronze_eres_flight_data1.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: BRONZE\ailab_bronze_eres_flight_data1.csv
+2025-12-05 17:46:55 - INFO - Target DB: bronze_data.db
+2025-12-05 17:46:55 - INFO - Target Table: bronze_eres_flight
+2025-12-05 17:46:55 - INFO -    Successfully read 46 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'bronze_eres_flight' in bronze_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- EXECUTING SILVER LOAD (Files map to respective tables) ---
+2025-12-05 17:46:55 - INFO - 
+--- Processing SILVER File: Ailab_curated_flight.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: SILVER\Ailab_curated_flight.csv
+2025-12-05 17:46:55 - INFO - Target DB: silver_data.db
+2025-12-05 17:46:55 - INFO - Target Table: Ailab_curated_flight
+2025-12-05 17:46:55 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'Ailab_curated_flight' in silver_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- Processing SILVER File: ailab_silver_eres_airportcode.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: SILVER\ailab_silver_eres_airportcode.csv
+2025-12-05 17:46:55 - INFO - Target DB: silver_data.db
+2025-12-05 17:46:55 - INFO - Target Table: silver_eres_airportcode
+2025-12-05 17:46:55 - INFO -    Successfully read 100 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'silver_eres_airportcode' in silver_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- Processing SILVER File: AiLab_Silver_eres_flight.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: SILVER\AiLab_Silver_eres_flight.csv
+2025-12-05 17:46:55 - INFO - Target DB: silver_data.db
+2025-12-05 17:46:55 - INFO - Target Table: Silver_eres_flight
+2025-12-05 17:46:55 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'Silver_eres_flight' in silver_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- Processing SILVER File: ailab_silver_eres_seasoncode.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: SILVER\ailab_silver_eres_seasoncode.csv
+2025-12-05 17:46:55 - INFO - Target DB: silver_data.db
+2025-12-05 17:46:55 - INFO - Target Table: silver_eres_seasoncode
+2025-12-05 17:46:55 - INFO -    Successfully read 20 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'silver_eres_seasoncode' in silver_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- EXECUTING GOLD LOAD (Files map to respective tables) ---
+2025-12-05 17:46:55 - INFO - 
+--- Processing GOLD File: AILab_Consumption_Customer_traveller.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: GOLD\AILab_Consumption_Customer_traveller.csv
+2025-12-05 17:46:55 - INFO - Target DB: gold_data.db
+2025-12-05 17:46:55 - INFO - Target Table: AILab_Consumption_Customer_traveller
+2025-12-05 17:46:55 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'AILab_Consumption_Customer_traveller' in gold_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- Processing GOLD File: AILab_Gold_dimension_flightdata.csv ---
+2025-12-05 17:46:55 - INFO - Source Path: GOLD\AILab_Gold_dimension_flightdata.csv
+2025-12-05 17:46:55 - INFO - Target DB: gold_data.db
+2025-12-05 17:46:55 - INFO - Target Table: Gold_dimension_flightdata
+2025-12-05 17:46:55 - INFO -    Successfully read 50 rows from CSV.
+2025-12-05 17:46:55 - INFO - Data successfully loaded into table 'Gold_dimension_flightdata' in gold_data.db. Strategy: REPLACE
+2025-12-05 17:46:55 - INFO - 
+--- Data Loading Process Finished ---
+2025-12-05 18:45:20 - INFO - --- Data Loading Process Started ---
+2025-12-05 18:45:20 - INFO - Configuration loaded successfully from sqllite_config.json.
+2025-12-05 18:45:20 - INFO - 
+--- EXECUTING BRONZE LOAD ---
+2025-12-05 18:45:20 - INFO - 
+--- Processing BRONZE File: ailab_bronze_eres_flight_data1.csv ---
+2025-12-05 18:45:20 - INFO - Source Path: BRONZE\ailab_bronze_eres_flight_data1.csv
+2025-12-05 18:45:20 - INFO - Target DB: bronze_data.db
+2025-12-05 18:45:20 - INFO - Target Table: bronze_eres_flight
+2025-12-05 18:45:20 - INFO -    Successfully read 46 rows from CSV.
+2025-12-05 18:45:20 - INFO - Data successfully loaded into table 'bronze_eres_flight' in bronze_data.db. Strategy: REPLACE
+2025-12-05 21:00:06 - INFO - --- Data Loading Process Started ---
+2025-12-05 21:00:06 - INFO - Configuration loaded successfully from sqllite_config.json.
+2025-12-05 21:00:06 - INFO - 
+--- EXECUTING BRONZE LOAD ---
+2025-12-05 21:00:06 - INFO - 
+--- Processing BRONZE File: ailab_bronze_eres_flight_data1.csv ---
+2025-12-05 21:00:06 - INFO - Source Path: BRONZE\ailab_bronze_eres_flight_data1.csv
+2025-12-05 21:00:06 - INFO - Target DB: bronze_data.db
+2025-12-05 21:00:06 - INFO - Target Table: bronze_eres_flight
+2025-12-05 21:00:06 - INFO -    Successfully read 46 rows from CSV.
+2025-12-05 21:00:06 - INFO - Data successfully loaded into table 'bronze_eres_flight' in bronze_data.db. Strategy: REPLACE

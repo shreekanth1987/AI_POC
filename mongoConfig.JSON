@@ -1,0 +1,7 @@
+{
+    "MONGODB_URI": "mongodb://localhost:27017/",
+    "DATABASE_NAME": "junior_OpenLineageDB",
+    "COLLECTION_NAME": "lineage_events",
+    "JSON_FILE_PATH": "lineage_events3.json",
+    "INGESTION_BASE_PATH": "MongoDB_JSON_Ingestion" 
+}

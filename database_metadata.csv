@@ -1,0 +1,3 @@
+schema,object_name,owner,certified,tags
+bronze,bronze_eres_flight,Data_Pipeline_User,Yes,#BRONZE
+silver,silver_eres_flightkey,Data_Pipeline_User,Yes,#SILVER

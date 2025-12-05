@@ -1,0 +1,15 @@
+create new table with below columns + new column
+ailab_aircraftnum,
+ailab_arrairportcodeid, 
+ailab_capacity, 
+ailab_createdatetm, 
+ailab_depairportcodeid, 
+ailab_flightid, 
+ailab_flightkey, 
+ailab_flightnumber , 
+{Unified_flight_key} , 
+ailab_kilodistance , 
+ailab_tailnumber, 
+ailab_updatedatetm    
+
+Logic for  {Unified_flight_key} =Col L+ {ColM substring-split using '-' (take lasty but 1 which is OR) + take last which is DEST } + Col Y

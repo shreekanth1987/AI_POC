@@ -1,0 +1,20 @@
+{
+    "files": {
+        "bronze_csv_file": "ailab_bronze_eres_flight_data1.csv",
+        "silver_csv_file": "AiLab_Silver_eres_flight.csv"
+    },
+    "databases": {
+        "bronze_database_file": "bronze_data.db",
+        "silver_database_file": "silver_data.db",
+        "gold_database_file": "gold_data.db"
+    },
+    "tables": {
+        "bronze_table": "bronze_data.db",
+        "silver_table": "silver_data.db",
+        "gold_table": "gold_data.db",
+        "table_name": "default_data_table"
+    },
+    "logging": {
+        "log_file": "db_operations.log"
+    }
+}

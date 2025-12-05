@@ -1,0 +1,220 @@
+import json
+from typing import Dict, List, Set, Optional, Any
+from collections import defaultdict
+from loadMongoDB import load_config, retrieve_and_print_json_getlatest
+import streamlit as st
+
+if 'data' not in st.session_state:
+    CONFIG_FILE = "utils\mongoConfig.JSON"
+    config = load_config(CONFIG_FILE)
+    if config:
+        try:
+            MONGODB_URI = config["MONGODB_URI"]
+            DATABASE_NAME = config["DATABASE_NAME"]
+            COLLECTION_NAME = config["COLLECTION_NAME"]
+            print("\n--- Starting MongoDB RETRIEVAL (Latest Completed Jobs) ---")
+            data = retrieve_and_print_json_getlatest(MONGODB_URI, DATABASE_NAME, COLLECTION_NAME)
+            st.session_state["data"] = {
+                "description": "OpenLineage events for medallion architecture with complete schema information",
+                "events":data
+                }
+        except KeyError as e:
+            print(f"Error: Missing required key '{e}' in {CONFIG_FILE}. Check your configuration file.")
+
+def load_openlineage_events(path: str):
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data['events']
+
+def build_lineage_graph(openlineage_events: List[Dict]) -> Dict[str, Any]:
+    """
+    Build a lineage graph from OpenLineage events.
+    
+    Args:
+        openlineage_events: List of OpenLineage event dictionaries
+    
+    Returns:
+        Dictionary containing upstream, downstream, and dataset details
+    """
+    # Graph structure: dataset -> list of upstream/downstream datasets
+    upstream_graph = defaultdict(set)  # dataset -> its inputs
+    downstream_graph = defaultdict(set)  # dataset -> its outputs
+    dataset_details = {}  # dataset -> full metadata
+    job_details = {}  # job -> metadata
+    
+    for event in openlineage_events:
+        # Extract job information
+        job = event.get('job', {})
+        job_name = f"{job.get('namespace', '')}/{job.get('name', '')}"
+        
+        if job_name not in job_details:
+            job_details[job_name] = {
+                'namespace': job.get('namespace'),
+                'name': job.get('name'),
+                'facets': job.get('facets', {})
+            }
+        
+        # Extract input datasets
+        inputs = event.get('inputs', [])
+        # Extract output datasets
+        outputs = event.get('outputs', [])
+        
+        # Process inputs
+        input_keys = []
+        for inp in inputs:
+            dataset_key = f"{inp.get('namespace', '')}/{inp.get('name', '')}"
+            input_keys.append(dataset_key)
+            
+            # Store dataset details
+            if dataset_key not in dataset_details:
+                dataset_details[dataset_key] = {
+                    'namespace': inp.get('namespace'),
+                    'name': inp.get('name'),
+                    'facets': inp.get('facets', {}),
+                    'type': 'inputs'
+                }
+        
+        # Process outputs
+        output_keys = []
+        for out in outputs:
+            dataset_key = f"{out.get('namespace', '')}/{out.get('name', '')}"
+            output_keys.append(dataset_key)
+            
+            # Store dataset details
+            if dataset_key not in dataset_details:
+                dataset_details[dataset_key] = {
+                    'namespace': out.get('namespace'),
+                    'name': out.get('name'),
+                    'facets': out.get('facets', {}),
+                    'type': 'outputs'
+                }
+        
+        # Build lineage relationships
+        # For each output, inputs are its upstream dependencies
+        for output_key in output_keys:
+            for input_key in input_keys:
+                upstream_graph[output_key].add(input_key)
+                downstream_graph[input_key].add(output_key)
+    
+    # Convert sets to lists for JSON serialization
+    upstream_graph = {k: list(v) for k, v in upstream_graph.items()}
+    downstream_graph = {k: list(v) for k, v in downstream_graph.items()}
+    
+    return {
+        'upstream_graph': upstream_graph,
+        'downstream_graph': downstream_graph,
+        'dataset_details': dataset_details,
+        'job_details': job_details
+    }
+
+# lineage_graph: Dict[str, Any]
+# lineage_graph: Graph built from build_lineage_graph()
+def get_lineage_details(table_name: str, 
+                       direction: str = 'upstream',
+                       levels: int = None) -> Dict[str, Any]:
+    """
+    Get lineage details for a specific table in upstream or downstream direction.
+    
+    Args:
+        table_name: Fully qualified table name (namespace/name) or just name
+        direction: 'upstream' or 'downstream'
+        levels: Number of levels to traverse (None for all levels)
+    
+    Returns:
+        Dictionary containing lineage information and table details
+    """
+    # events = load_openlineage_events("openlineage_medallion_architecture.json")
+    # events = json.load(st.session_state["data"])
+    lineage_graph = build_lineage_graph(st.session_state["data"]['events'])
+    direction = direction.lower()
+    if direction not in ['upstream', 'downstream']:
+        raise ValueError("Direction must be 'upstream' or 'downstream'")
+    
+    # Find matching dataset key
+    dataset_details = lineage_graph['dataset_details']
+    target_key = None
+    
+    # Try exact match first
+    if table_name in dataset_details:
+        target_key = table_name
+    else:
+        # Try partial match on name
+        for key in dataset_details:
+            if key.endswith(f"/{table_name}") or key.split('/')[-1] == table_name:
+                target_key = key
+                break
+    
+    if not target_key:
+        return {
+            'error': f"Table '{table_name}' not found in lineage graph",
+            'available_tables': list(dataset_details.keys())
+        }
+    
+    # Get the appropriate graph
+    graph = lineage_graph['upstream_graph' if direction == 'upstream' else 'downstream_graph']
+    
+    # Traverse the lineage using BFS
+    visited = set()
+    current_level = {target_key}
+    lineage_tree = {target_key: []}
+    level_count = 0
+    
+    while current_level and (levels is None or level_count < levels):
+        next_level = set()
+        
+        for node in current_level:
+            if node in visited:
+                continue
+            visited.add(node)
+            
+            # Get dependencies
+            dependencies = graph.get(node, [])
+            lineage_tree[node] = dependencies
+            
+            # Add to next level
+            next_level.update(dependencies)
+        
+        current_level = next_level
+        level_count += 1
+    
+    # Collect all tables in the lineage
+    all_tables_in_lineage = list(visited)
+    
+    # Get details for all tables in lineage
+    tables_details = {
+        table: dataset_details.get(table, {}) 
+        for table in all_tables_in_lineage
+    }
+    
+    return {
+        'target_table': target_key,
+        'direction': direction,
+        'lineage_tree': lineage_tree,
+        'all_tables': all_tables_in_lineage,
+        'table_details': tables_details,
+        'target_table_info': dataset_details.get(target_key, {})
+    }
+
+
+
+# Usage Example
+# if __name__ == "__main__":
+#     # Load OpenLineage events from JSON file
+#     # print(events)
+#     events = load_openlineage_events("openlineage_medallion_architecture.json")
+#     lineage_graph = build_lineage_graph(events)
+#     # print(f"Lineage_graph:{lineage_graph}")
+#     # Get upstream lineage for a specific table
+#     upstream = get_lineage_details(lineage_graph, 'gold.inventory_analytics', 'upstream')
+#     # print(f"Upstream tables: {upstream['lineage_tree']}")
+#     # print('---'*10)
+#     print(f"Upstream:{upstream}")
+    
+    # # Get downstream lineage (impact analysis) with level limit
+    # downstream = get_lineage_details(lineage_graph, 'sales_db.dbo.raw_orders', 'downstream', levels=2)
+    # # print(f"Downstream tables: {downstream['all_tables']}")
+    
+    # # Get table details
+    # table_info = upstream['target_table_info']
+    # print(f"Table details: {json.dumps(table_info, indent=2)}")
+tools = [get_lineage_details]
